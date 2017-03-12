@@ -4,8 +4,8 @@ const path = require('path');
 var db = require('../queries');
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-  // res.send('index.html')
+  // res.render('index', { title: 'Express' });
+  res.sendFile(path.join(__dirname,'..','views', 'index.html'));
 });
 
 router.get('/users', function(req, res, next) {
