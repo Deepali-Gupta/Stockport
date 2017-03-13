@@ -1,18 +1,18 @@
-DROP DATABASE IF EXISTS puppies;
-CREATE DATABASE puppies;
+-- DROP DATABASE IF EXISTS puppies;
+-- CREATE DATABASE puppies;
 
 \c puppies;
 
-CREATE TABLE pups (
-  ID SERIAL PRIMARY KEY,
-  name VARCHAR,
-  breed VARCHAR,
-  age INTEGER,
-  sex VARCHAR
-);
+-- CREATE TABLE pups (
+--   ID SERIAL PRIMARY KEY,
+--   name VARCHAR,
+--   breed VARCHAR,
+--   age INTEGER,
+--   sex VARCHAR
+-- );
 
-INSERT INTO pups (name, breed, age, sex)
-  VALUES ('Tyler', 'Retrieved', 3, 'M');
+-- INSERT INTO pups (name, breed, age, sex)
+--   VALUES ('Tyler', 'Retrieved', 3, 'M');
 
 create table stock (
 	stockid serial PRIMARY KEY,
@@ -20,6 +20,7 @@ create table stock (
 	industry varchar
 );
 
+\COPY stock FROM 'C:\Users\HD\Desktop\myapp\stocks.csv' DELIMITERS ',' CSV;
 -- create table history (
 -- 	histid serial PRIMARY KEY,
 -- 	stockid int references stock(stockid),

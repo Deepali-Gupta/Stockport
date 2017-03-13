@@ -21,6 +21,7 @@ router.get('/home',function(req,res, next) {
 
 });
 router.get('/api/puppies', db.getAllPuppies);
+router.get('/api/stocks', db.getAllStocks);
 router.get('/api/puppies/:id', db.getSinglePuppy);
 router.post('/api/puppies', db.createPuppy);
 // router.put('/api/puppies/:id', db.updatePuppy);

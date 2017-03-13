@@ -36,7 +36,7 @@ function getSinglePuppy(req, res, next) {
 }
 
 function getAllStocks(req, res, next) {
-  db.many('select stockname, industry, where stockname <> \'sensex\'')
+  db.many('select stockname, industry  from stock where stockname <> \'Sensex\'')
     .then(function (data) {
       res.status(200)
         .json({

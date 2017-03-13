@@ -1,32 +1,25 @@
 $(document).ready(function () {
-    var table = $('table').DataTable();
-<<<<<<< HEAD
-    $('button').click(function () {
-
-        console.log("pressed");
-        // $.getJSON("/api/puppies", function (json) {
-        //     console.log(json);
-        // });
-        var url = "/api/puppies";
+    var table = $('#table_id').DataTable();
+    loadStocks();
+    function loadStocks() {
+        var url = "/api/stocks";
         $.getJSON(url, function (json) {
-            console.log(json);
+            // console.log(json);
             var tr;
             json = json.data;
             for (var i = 0; i < json.length; i++) {
-                tr = $('<tr/>');
-                tr.append("<td>" + json[i].name + "</td>");
-                tr.append("<td>" + json[i].sex+ "</td>");
-                $('table').append(tr);
+                // tr = $('<tr/>');
+                // tr.append("<td>" + json[i].stockname + "</td>");
+                // tr.append("<td>" + json[i].industry + "</td>");
+                // $('#table_id').append(tr);
+                table.row.add([
+                    json[i].stockname,
+                    json[i].industry
+                ]);
             }
+            table.draw();
         });
-        table.draw();
-        
-
-    });
-
-})
-=======
-
+    }
     $("#form1").submit(function (event) {
 
         // Stop form from submitting normally
@@ -41,15 +34,14 @@ $(document).ready(function () {
             url = form.attr("action");
 
         // Send the data using post
-        var posting = $.post(url, { name:n, breed:b, age:a, sex:s });
+        var posting = $.post(url, { name: n, breed: b, age: a, sex: s });
 
         // Put the results in a div
         posting.done(function (data) {
-           console.log(data);
+            console.log(data);
         });
     });
     // $('button').click(function () {
-
     //     console.log("pressed");
     //     // $.getJSON("/api/puppies", function (json) {
     //     //     console.log(json);
@@ -72,8 +64,4 @@ $(document).ready(function () {
     //             console.log(data);
     //         });
 
-
 });
-
-
->>>>>>> 8ad235fdc8629b70aba69229744629153ed20877
