@@ -19,6 +19,66 @@ function getAllPuppies(req, res, next) {
     });
 }
 
+function getSinglePuppy(req, res, next) {
+  var pupID = parseInt(req.params.id);
+  db.one('select * from pups where id = $1', pupID)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ONE puppy'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getAllStocks(req, res, next) {
+  db.many('select stockname, industry, where stockname <> \'sensex\'')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ALL stocks'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getTopStocks(req, res, next) {
+  db.any('select * from pups')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ALL puppies'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getLowStocks(req, res, next) {
+  db.any('select * from pups')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ALL puppies'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
 
 function createStock(req, res, next) {
   db.none('insert into stock(stockname, industry)' +
@@ -130,23 +190,6 @@ function createPuppy(req, res, next) {
     });
 }
 
-function getSinglePuppy(req, res, next) {
-  var pupID = parseInt(req.params.id);
-  db.one('select * from pups where id = $1', pupID)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ONE puppy'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-
-}
-
 function updatePuppy(req, res, next) {
   db.none('update pups set name=$1, breed=$2, age=$3, sex=$4 where id=$5',
     [req.body.name, req.body.breed, parseInt(req.body.age),
@@ -182,6 +225,7 @@ function removePuppy(req, res, next) {
 
 module.exports = {
   getAllPuppies: getAllPuppies,
+  getAllStocks: getAllStocks,
   getSinglePuppy: getSinglePuppy,
   createPuppy: createPuppy,
   //   updatePuppy: updatePuppy,

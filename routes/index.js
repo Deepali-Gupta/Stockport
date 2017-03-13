@@ -3,17 +3,18 @@ var router = express.Router();
 const path = require('path');
 var db = require('../queries');
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   // res.render('index', { title: 'Express' });
-  res.sendFile(path.join(__dirname,'..','views', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
 });
 
-router.get('/users', function(req, res, next) {
-  // res.render('index', { title: 'Express' });
-  res.send('dick');
-  next();
+router.get('/data', function (req, res, next) {
+  res.status(200)
+    .json({
+      status: 'success',
+      message: 'Retrieved ALL puppies'
+    });
 });
-
 
 router.get('/api/puppies', db.getAllPuppies);
 router.get('/api/puppies/:id', db.getSinglePuppy);
