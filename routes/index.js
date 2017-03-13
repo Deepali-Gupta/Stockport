@@ -16,6 +16,10 @@ router.get('/data', function (req, res, next) {
     });
 });
 
+router.get('/home',function(req,res, next) {
+  res.sendFile(path.join(__dirname,'..','views','homepage.html' ));
+
+});
 router.get('/api/puppies', db.getAllPuppies);
 router.get('/api/puppies/:id', db.getSinglePuppy);
 router.post('/api/puppies', db.createPuppy);
