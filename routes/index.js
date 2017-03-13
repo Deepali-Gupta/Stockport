@@ -8,12 +8,9 @@ router.get('/', function (req, res, next) {
   res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
 });
 
-router.get('/data', function (req, res, next) {
-  res.status(200)
-    .json({
-      status: 'success',
-      message: 'Retrieved ALL puppies'
-    });
+router.get('/home',function(req,res, next) {
+  res.sendFile(path.join(__dirname,'..','views','homepage.html' ));
+
 });
 
 router.get('/api/puppies', db.getAllPuppies);
