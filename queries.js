@@ -138,7 +138,7 @@ function getLowStocks(req, res, next) {
 }
 
 function getUserDetails(req, res, next) {
-  db.one('select username, email, create_date'+
+  db.one('select username, email'+
          ' from users'+
          ' where username = ${username}', req.body)
     .then(function (data) {
@@ -157,7 +157,7 @@ function getUserDetails(req, res, next) {
 function getPortStocks(req, res, next) {
   db.many('select stockname, close, (close - open) as diff, 100*(close - open)/open as perc, qty, (qty*close - cost) as profit'+
           ' from stock inner join '+
-          ' (select t2.stockid, close, qty, cost from portfolio inner join '+
+          ' (select t2.stockid, close, open, qty, cost from portfolio inner join '+
           '(select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
 						' from history'+
 						' order by stockid asc, day desc) t2'+
@@ -300,9 +300,8 @@ function createPort(req, res, next) {
 }
 
 function createUser(req, res, next) {
-  req.body.create_date = Date(req.body.create_date);
-  db.none('insert into users(username, password, role, email, create_date)' +
-    ' values(${username},${password},${role} ${email}, ${create_date})',
+  db.none('insert into users(username, password, role, email)' +
+    ' values(${username},${password},${role} ${email})',
     req.body)
     .then(function () {
       res.status(200)

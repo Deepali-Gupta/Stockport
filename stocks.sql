@@ -32,8 +32,7 @@ create table users (
 	username varchar not null unique,
 	password varchar not null,
 	role varchar,
-	email varchar unique,
-	create_date date
+	email varchar unique
 );
 
 create table log (
@@ -51,3 +50,10 @@ create table portfolio (
 	qty bigint,
 	cost real
 );
+
+create materialized view portfolio as 
+(select userid, log.stockid, sum(trans_qty) as qty, sum(trans_qty*close) as cost
+from log inner join history
+on log.stockid=history.stockid
+and log.trans_date=history.day
+group by userid, log.stockid);
