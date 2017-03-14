@@ -168,6 +168,90 @@ function getLowStocks(req, res, next) {
     });
 }
 
+function getUserDetails(req, res, next) {
+  db.one('select username, email, create_date'+
+         ' from users'+
+         ' where username = ${username}')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved user details'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getPortStocks(req, res, next) {
+  db.many('select stockname, close, (close - open) as diff, 100*(close - open)/open as perc, qty, (qty*close - cost) as profit'+
+          ' from stock inner join '+
+          ' (select t2.stockid, close, qty, cost from portfolio inner join '+
+          '(select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+						' from history'+
+						' order by stockid asc, day desc) t2'+
+						' on portfolio.stockid = t2.stockid'+
+						' where portfolio.userid = (select userid from users where username = ${username})) t1'+
+            ' on stock.stockid = t1.stockid')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved portfolio stocks of one user'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getPortStockDetails(req, res, next) {
+  db.one('select stockname, industry, close, (close - open) as diff, 100*(close - open)/open as perc, qty, (qty*close - cost) as profit'+
+          ' from stock inner join '+
+          ' (select t2.stockid, close, qty, cost from portfolio inner join '+
+          '(select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+						' from history'+
+						' order by stockid asc, day desc) t2'+
+						' on portfolio.stockid = t2.stockid'+
+						' where portfolio.userid = (select userid from users where username = ${username})) t1'+
+            ' on stock.stockid = t1.stockid'+
+            ' where stockid = (select stockid from stock where stockname = ${stockname})')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved portfolio stock details of one user and one stock'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getTransHist(req, res, next) {
+  db.many('select trans_qty, trans_date, close '+
+          'from log inner join history'+
+          ' on log.stockid = history.stockid'+
+          ' and log.trans_date = history.day'+
+          ' where log.userid = (select userid from users where username = ${username})'+
+          ' order by trans_date')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved transaction history of one stock for one user'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function createStock(req, res, next) {
   db.none('insert into stock(stockname, industry)' +
     'values(${stockname}, ${industry})',
@@ -249,7 +333,7 @@ function createPort(req, res, next) {
 function createUser(req, res, next) {
   req.body.create_date = Date(req.body.create_date);
   db.none('insert into users(username, password, role, email, create_date)' +
-    'values(${username},${password},${role} ${email}, ${create_date})',
+    ' values(${username},${password},${role} ${email}, ${create_date})',
     req.body)
     .then(function () {
       res.status(200)
