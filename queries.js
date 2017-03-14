@@ -23,10 +23,29 @@ function getSingleStock(req, res, next) {
     });
 }
 
+function getStockHist(req, res, next) {
+  db.any('select day, open, high, low, close, volume, adj_close'+
+         ' from history'+
+         ' where stockid = (select stockid from stock where stockname={stockname})'+
+         ' order by day desc',req.body)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ONE stock history'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+
 function getSensexPrice(req, res, next) {
   db.one('select distinct on (stockid) stockid, close, (close-open) as diff, 100*(close-open)/open as perc'+
-         ' from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
-         ' order by stockid, day desc', req.body)
+         ' from history where stockid = (select stockid from stock where stockname= \'Sensex\') '+
+         ' order by stockid, day desc')
     .then(function (data) {
       res.status(200)
         .json({
@@ -57,23 +76,6 @@ function getSensexHist(req, res, next) {
     });
 }
 
-function getStockHist(req, res, next) {
-  db.any('select day, open, high, low, close, volume, adj_close'+
-         ' from history'+
-         ' where stockid = (select stockid from stock where stockname=$1)'+
-         ' order by day desc',req.body)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ONE stock history'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
 
 function getAllStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+

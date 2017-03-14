@@ -2,9 +2,11 @@ $(document).ready(function () {
     var table_stocks = $('#table_stocks').DataTable();
     var table_gainers = $('#table_gainers').DataTable();
     var table_losers = $('#table_losers').DataTable();
+    $('#sensex_index').click(showSensexPage);
     loadStocks();
     loadTopGainers();
     loadTopLosers();
+    showSensexDetails();
     // table_stocks.column(0).visible(false);
     table_stocks.on('click', 'tr', function () {
         var data = table.row(this).data();
@@ -14,6 +16,20 @@ $(document).ready(function () {
         // alert('Clicked row id ' + id);
     });
 
+    function showSensexDetails() {
+        var url = "/api/getsensexprice";
+        $.getJSON(url, function (json) {
+            // console.log(json); 
+            json = json.data;
+            console.log(json);
+            $('#sensex_index').text(json.close);
+            $('#sensex_diff').text("diff = " + json.diff);
+            $('#sensex_perc').text("perc = " + json.perc);
+        });
+    }
+    function showSensexPage() {
+        window.location = "/sensexview"
+    }
 
 
     function loadStocks() {

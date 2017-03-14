@@ -1,5 +1,5 @@
 var pgp = require('pg-promise')(/*options*/);
-var connectionString = 'postgres://postgres:admin@localhost:5432/puppies';
+var connectionString = 'postgres://postgres:admin@localhost:5432/stocks';
 // "postgres://YourUserName:YourPassword@localhost:5432/YourDatabase"
 var db = pgp(connectionString);
 var express = require('express');
