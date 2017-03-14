@@ -14,6 +14,8 @@
 -- INSERT INTO pups (name, breed, age, sex)
 --   VALUES ('Tyler', 'Retrieved', 3, 'M');
 
+set datestyle = YMD;
+
 create table stock (
 	stockid serial PRIMARY KEY,
 	stockname varchar not null unique,
@@ -45,18 +47,18 @@ create table users (
 	create_date date
 );
 
--- create table log (
--- 	logid serial PRIMARY KEY,
--- 	userid int references user(userid),
--- 	stockid int references stock(stockid),
--- 	trans_qty bigint not null,
--- 	trans_date date YYYY-MM-DD not null
--- );
+create table log (
+	logid serial PRIMARY KEY,
+	userid int references user(userid),
+	stockid int references stock(stockid),
+	trans_qty bigint not null,
+	trans_date date not null
+);
 
--- create table portfolio (
--- 	portid serial PRIMARY KEY,
--- 	userid int references user(userid),
--- 	stockid int references stock(stockid),
--- 	qty bigint,
--- 	profit real
--- );
+create table portfolio (
+	portid serial PRIMARY KEY,
+	userid int references users(userid),
+	stockid int references stock(stockid),
+	qty bigint,
+	profit real
+);

@@ -156,7 +156,8 @@ function createHist(req, res, next) {
   req.body.volume = parseInt(req.body.volume);
   req.body.day = Date(req.body.day);
   db.none('insert into stock(stockid, day, open, high, low, close, adj_close, volume)' +
-    'values((select stockid from stock where stockname = ${stockname}), ${day}, ${open}, ${high}, ${low}, ${close}, ${adj_close}, ${volume})',
+    'values((select stockid from stock where stockname = ${stockname}), ${day}, ${open},'+
+    ' ${high}, ${low}, ${close}, ${adj_close}, ${volume})',
     req.body)
     .then(function () {
       res.status(200)
