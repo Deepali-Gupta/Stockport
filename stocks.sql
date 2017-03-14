@@ -1,18 +1,7 @@
--- DROP DATABASE IF EXISTS puppies;
--- CREATE DATABASE puppies;
+drop database if exists stocks;
+create database stocks;
 
-\c puppies;
-
--- CREATE TABLE pups (
---   ID SERIAL PRIMARY KEY,
---   name VARCHAR,
---   breed VARCHAR,
---   age INTEGER,
---   sex VARCHAR
--- );
-
--- INSERT INTO pups (name, breed, age, sex)
---   VALUES ('Tyler', 'Retrieved', 3, 'M');
+\c stocks;
 
 set datestyle = YMD;
 

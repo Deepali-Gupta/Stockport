@@ -1,5 +1,5 @@
 var pgp = require('pg-promise')(/*options*/);
-var connectionString = 'postgres://postgres:admin@localhost:5432/puppies';
+var connectionString = 'postgres://postgres:admin@localhost:5432/stocks';
 // "postgres://YourUserName:YourPassword@localhost:5432/YourDatabase"
 var db = pgp(connectionString);
 
@@ -37,10 +37,10 @@ function getSinglePuppy(req, res, next) {
 
 function getSingleStock(req, res, next) {
   db.one('select stockname, industry, close, open, high, low, volume'+
-         'from stock inner join ('+
-         'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-         'from history order by stockid asc, day desc) t'+
-         'on stock.stockid=t.stockid where stockname = $1')
+         ' from stock inner join ('+
+         ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+         ' from history order by stockid asc, day desc) t'+
+         ' on stock.stockid=t.stockid where stockname = ${stockname}')
     .then(function (data) {
       res.status(200)
         .json({
@@ -56,9 +56,9 @@ function getSingleStock(req, res, next) {
 
 function getStockHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
-         'from history'+
-         'where stockid = (select stockid from stock where stockname=$1)'+
-         'order by day desc')
+         ' from history'+
+         ' where stockid = (select stockid from stock where stockname=${stockname})'+
+         ' order by day desc')
     .then(function (data) {
       res.status(200)
         .json({
@@ -74,10 +74,11 @@ function getStockHist(req, res, next) {
 
 function getAllStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
-          'from stock inner join ('+
-          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
-          'on stock.stockid=t.stockid')
+          ' from stock inner join ('+
+          ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+          ' from history order by stockid asc, day desc ) t'+
+          ' on stock.stockid=t.stockid'+
+          ' where stockname <> \'Sensex\' ')
     .then(function (data) {
       res.status(200)
         .json({
@@ -93,11 +94,12 @@ function getAllStocks(req, res, next) {
 
 function getTopStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
-          'from stock inner join ('+
-          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
-          'on stock.stockid=t.stockid'+
-          'order by perc desc limit 5')
+          ' from stock inner join ('+
+          ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+          ' from history order by stockid asc, day desc ) t'+
+          ' on stock.stockid=t.stockid'+
+          ' where stockname <> \'Sensex\''+
+          ' order by perc desc limit 5')
     .then(function (data) {
       res.status(200)
         .json({
@@ -113,11 +115,12 @@ function getTopStocks(req, res, next) {
 
 function getLowStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
-          'from stock inner join ('+
-          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
-          'on stock.stockid=t.stockid'+
-          'order by perc limit 5')
+          ' from stock inner join ('+
+          ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+          ' from history order by stockid asc, day desc ) t'+
+          ' on stock.stockid=t.stockid'+
+          ' where stockname <> \'Sensex\''+
+          ' order by perc limit 5')
     .then(function (data) {
       res.status(200)
         .json({
@@ -156,7 +159,8 @@ function createHist(req, res, next) {
   req.body.volume = parseInt(req.body.volume);
   req.body.day = Date(req.body.day);
   db.none('insert into stock(stockid, day, open, high, low, close, adj_close, volume)' +
-    'values((select stockid from stock where stockname = ${stockname}), ${day}, ${open}, ${high}, ${low}, ${close}, ${adj_close}, ${volume})',
+    'values((select stockid from stock where stockname = ${stockname}), ${day}, ${open},'+
+    ' ${high}, ${low}, ${close}, ${adj_close}, ${volume})',
     req.body)
     .then(function () {
       res.status(200)
@@ -174,7 +178,8 @@ function createLog(req, res, next) {
   req.body.trans_qty = parseInt(req.body.trans_qty);
   req.body.trans_date = Date(req.body.trans_date);
   db.none('insert into log(userid, stockid, trans_qty, trans_date)' +
-    'values((select userid from user where username = ${username}), (select stockid from stock where stockname = ${stockname}), ${trans_qty}, ${trans_date})',
+    'values((select userid from user where username = ${username}), '+
+    '(select stockid from stock where stockname = ${stockname}), ${trans_qty}, ${trans_date})',
     req.body)
     .then(function () {
       res.status(200)
@@ -192,7 +197,8 @@ function createPort(req, res, next) {
   req.body.qty = parseInt(req.body.qty);
   req.body.profit = parseFloat(req.body.profit);
   db.none('insert into portfolio(userid, stockid, qty, profit)' +
-    'values((select userid from user where username = ${username}), (select stockid from stock where stockname = ${stockname}), ${qty}, ${profit})',
+    'values((select userid from user where username = ${username}), '+
+    '(select stockid from stock where stockname = ${stockname}), ${qty}, ${profit})',
     req.body)
     .then(function () {
       res.status(200)
