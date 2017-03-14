@@ -54,6 +54,40 @@ function getSingleStock(req, res, next) {
     });
 }
 
+function getSensexPrice(req, res, next) {
+  db.one('select distinct on (stockid) stockid, close, (close-open) as diff, 100*(close-open)/open as perc'+
+         'from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
+         'order by stockid, day desc')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved sensex price'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getSensexHist(req, res, next) {
+  db.any('select day, open, high, low, close, volume, adj_close'+
+         'from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
+         'order by day desc')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved sensex history'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getStockHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
          ' from history'+
@@ -158,9 +192,9 @@ function createHist(req, res, next) {
   req.body.adj_close = parseFloat(req.body.adj_close);
   req.body.volume = parseInt(req.body.volume);
   req.body.day = Date(req.body.day);
-  db.none('insert into stock(stockid, day, open, high, low, close, adj_close, volume)' +
+  db.none('insert into stock(stockid, day, open, high, low, close, volume, adj_close)' +
     'values((select stockid from stock where stockname = ${stockname}), ${day}, ${open},'+
-    ' ${high}, ${low}, ${close}, ${adj_close}, ${volume})',
+    ' ${high}, ${low}, ${close}, ${volume}, ${adj_close})',
     req.body)
     .then(function () {
       res.status(200)
@@ -196,15 +230,32 @@ function createLog(req, res, next) {
 function createPort(req, res, next) {
   req.body.qty = parseInt(req.body.qty);
   req.body.profit = parseFloat(req.body.profit);
-  db.none('insert into portfolio(userid, stockid, qty, profit)' +
+  db.none('insert into portfolio(userid, stockid, qty, cost)' +
     'values((select userid from user where username = ${username}), '+
-    '(select stockid from stock where stockname = ${stockname}), ${qty}, ${profit})',
+    '(select stockid from stock where stockname = ${stockname}), ${qty}, ${cost})',
     req.body)
     .then(function () {
       res.status(200)
         .json({
           status: 'success',
           message: 'Inserted one user portfolio entry'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function createUser(req, res, next) {
+  req.body.create_date = Date(req.body.create_date);
+  db.none('insert into users(username, password, role, email, create_date)' +
+    'values(${username},${password},${role} ${email}, ${create_date})',
+    req.body)
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Inserted one user entry'
         });
     })
     .catch(function (err) {
