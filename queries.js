@@ -36,7 +36,11 @@ function getSinglePuppy(req, res, next) {
 }
 
 function getAllStocks(req, res, next) {
-  db.many('select stockname, industry  from stock where stockname <> \'Sensex\'')
+  db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
+          'from stock inner join ('+
+          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
+          'on stock.stockid=t.stockid')
     .then(function (data) {
       res.status(200)
         .json({
@@ -51,13 +55,18 @@ function getAllStocks(req, res, next) {
 }
 
 function getTopStocks(req, res, next) {
-  db.any('select * from pups')
+  db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
+          'from stock inner join ('+
+          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
+          'on stock.stockid=t.stockid'+
+          'order by perc desc limit 5')
     .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
           data: data,
-          message: 'Retrieved ALL puppies'
+          message: 'Retrieved top gainers'
         });
     })
     .catch(function (err) {
@@ -66,13 +75,18 @@ function getTopStocks(req, res, next) {
 }
 
 function getLowStocks(req, res, next) {
-  db.any('select * from pups')
+  db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
+          'from stock inner join ('+
+          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
+          'on stock.stockid=t.stockid'+
+          'order by perc limit 5')
     .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
           data: data,
-          message: 'Retrieved ALL puppies'
+          message: 'Retrieved top losers'
         });
     })
     .catch(function (err) {
@@ -83,24 +97,6 @@ function getLowStocks(req, res, next) {
 function createStock(req, res, next) {
   db.none('insert into stock(stockname, industry)' +
     'values(${stockname}, ${industry})',
-    req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one stock'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function createStock(req, res, next) {
-  req.body.market_cap = parseFloat(req.body.market_cap);
-  req.body.eps = parseFloat(req.body.eps);
-  db.none('insert into stock(stockname, industry, market_cap, eps)' +
-    'values(${stockname}, ${industry}, ${market_cap}, ${eps})',
     req.body)
     .then(function () {
       res.status(200)
@@ -226,6 +222,8 @@ function removePuppy(req, res, next) {
 module.exports = {
   getAllPuppies: getAllPuppies,
   getAllStocks: getAllStocks,
+  getAllStocks: getTopStocks,
+  getAllStocks: getLowStocks,
   getSinglePuppy: getSinglePuppy,
   createPuppy: createPuppy,
   //   updatePuppy: updatePuppy,
