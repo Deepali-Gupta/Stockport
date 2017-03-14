@@ -16,7 +16,7 @@
 
 create table stock (
 	stockid serial PRIMARY KEY,
-	stockname varchar not null,
+	stockname varchar not null unique,
 	industry varchar
 );
 
@@ -36,13 +36,14 @@ create table history (
 
 \COPY history FROM 'C:\Users\HD\Desktop\myapp\history.csv' DELIMITERS ',' CSV;
 
--- create table user (
--- 	userid serial PRIMARY KEY,
--- 	username varchar not null,
--- 	password, varchar not null,
--- 	email varchar,
--- 	create_date date YYYY-MM-DD
--- );
+create table users (
+	userid serial PRIMARY KEY,
+	username varchar not null unique,
+	password varchar not null,
+	role varchar,
+	email varchar unique,
+	create_date date
+);
 
 -- create table log (
 -- 	logid serial PRIMARY KEY,
