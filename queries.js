@@ -56,8 +56,8 @@ function getSingleStock(req, res, next) {
 
 function getSensexPrice(req, res, next) {
   db.one('select distinct on (stockid) stockid, close, (close-open) as diff, 100*(close-open)/open as perc'+
-         'from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
-         'order by stockid, day desc')
+         ' from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
+         ' order by stockid, day desc')
     .then(function (data) {
       res.status(200)
         .json({
@@ -73,8 +73,8 @@ function getSensexPrice(req, res, next) {
 
 function getSensexHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
-         'from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
-         'order by day desc')
+         ' from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
+         ' order by day desc')
     .then(function (data) {
       res.status(200)
         .json({
