@@ -4,37 +4,6 @@ var connectionString = 'postgres://postgres:admin@localhost:5432/stocks';
 var db = pgp(connectionString);
 
 // add query functions
-function getAllPuppies(req, res, next) {
-  db.any('select * from pups')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL puppies'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function getSinglePuppy(req, res, next) {
-  var pupID = parseInt(req.params.id);
-  db.one('select * from pups where id = $1', pupID)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ONE puppy'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
 function getSingleStock(req, res, next) {
   db.one('select stockname, industry, close, open, high, low, volume'+
          ' from stock inner join ('+
@@ -347,29 +316,11 @@ function createUser(req, res, next) {
     });
 }
 
-function createPuppy(req, res, next) {
-  req.body.age = parseInt(req.body.age);
-  db.none('insert into pups(name, breed, age, sex)' +
-    'values(${name}, ${breed}, ${age}, ${sex})',
-    req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one puppy'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
 function updateStock(req, res, next) {
-  db.none('update table stock set stockname = $1 '+
-		'industry = $2 '+
-	  'where stockname = ${stockname}',
-    [req.body.name, req.body.breed, parseInt(req.body.age),
-      req.body.sex, parseInt(req.params.id)])
+  db.none('update table stock set stockname = ${stockname1} '+
+		'industry = ${industry} '+
+	  'where stockname = ${stockname2}',
+    [req.body])
     .then(function () {
       res.status(200)
         .json({
@@ -382,15 +333,106 @@ function updateStock(req, res, next) {
     });
 }
 
-function removePuppy(req, res, next) {
-  var pupID = parseInt(req.params.id);
-  db.result('delete from pups where id = $1', pupID)
+function updatePort(req, res, next) {
+  db.none('update table portfolio '+
+	'set qty = qty + ${qty} '+
+		'cost = cost + ${qty} * '+
+		'(select close from history where stockid = '+
+			'(select stockid from stock where stockname=${stockname})'+
+			'and day = ${day} )'+
+	' where stockid = (select stockid from stock where stockname=${stockname})'+
+		' and userid = (select userid from users where username=${username})',
+    [req.body])
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated portfolio'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function updateUser(req, res, next) {
+  db.none('update table users '+
+	'set username = ${username2} '+
+		'password = ${password} '+
+		'role = ${role} '+
+		'email = ${email} '+
+	'where username = ${username1}',
+    [req.body])
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated User'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function removeStock(req, res, next) {
+  db.result('delete from stock where stockname = ${stockname}', req.body)
     .then(function (result) {
       /* jshint ignore:start */
       res.status(200)
         .json({
           status: 'success',
-          message: `Removed ${result.rowCount} puppy`
+          message: `Removed ${result.rowCount} Stock`
+        });
+      /* jshint ignore:end */
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function removeUser(req, res, next) {
+  db.result('delete from users where username = ${username}', req.body)
+    .then(function (result) {
+      /* jshint ignore:start */
+      res.status(200)
+        .json({
+          status: 'success',
+          message: `Removed ${result.rowCount} User`
+        });
+      /* jshint ignore:end */
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function removePortTrig(req, res, next) {
+  db.result('delete from portfolio where qty = 0', req.body)
+    .then(function (result) {
+      /* jshint ignore:start */
+      res.status(200)
+        .json({
+          status: 'success',
+          message: `Removed ${result.rowCount} Portfolio entry`
+        });
+      /* jshint ignore:end */
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function removePort(req, res, next) {
+  db.result('delete from portfolio '+
+'where stockid = (select stockid from stock where stockname = ${stockname})'+
+' and userid = (select userid from users where username = ${username})', req.body)
+    .then(function (result) {
+      /* jshint ignore:start */
+      res.status(200)
+        .json({
+          status: 'success',
+          message: `Removed ${result.rowCount} Portfolio entry`
         });
       /* jshint ignore:end */
     })
@@ -401,9 +443,27 @@ function removePuppy(req, res, next) {
 
 module.exports = {
   getAllStocks: getAllStocks,
-  getAllStocks: getTopStocks,
-  getAllStocks: getLowStocks,
+  getTopStocks: getTopStocks,
+  getLowStocks: getLowStocks,
   getSingleStock: getSingleStock,
   getStockHist: getStockHist,
-  
+  getSensexPrice: getSensexPrice,
+  getSensexHist: getSensexHist,
+  getStockHist: getStockHist,
+  getUserDetails: getUserDetails,
+  getPortStocks: getPortStocks,
+  getPortStockDetails: getPortStockDetails,
+  getTransHist: getTransHist,
+  createStock: createStock,
+  createHist: createHist,
+  createLog: createLog,
+  createPort: createPort,
+  createUser: createUser,
+  updateStock: updateStock,
+  updatePort: updatePort,
+  updateUser: updateUser,
+  removeStock: removeStock,
+  removeUser: removeUser,
+  removePortTrig: removePortTrig,
+  removePort: removePort
 };
