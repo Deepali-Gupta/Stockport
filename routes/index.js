@@ -5,15 +5,8 @@ var db = require('../queries');
 /* GET home page. */
 router.get('/', function (req, res, next) {
   // res.render('index', { title: 'Express' });
-  res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-});
-
-router.get('/data', function (req, res, next) {
-  res.status(200)
-    .json({
-      status: 'success',
-      message: 'Retrieved ALL puppies'
-    });
+  // res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+  res.redirect('/home');
 });
 
 router.get('/home',function(req,res, next) {
