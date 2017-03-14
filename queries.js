@@ -180,14 +180,14 @@ function getPortStocks(req, res, next) {
 function getPortStockDetails(req, res, next) {
   db.one('select stockname, industry, close, (close - open) as diff, 100*(close - open)/open as perc, qty, (qty*close - cost) as profit'+
           ' from stock inner join '+
-          ' (select t2.stockid, close, qty, cost from portfolio inner join '+
+          ' (select t2.stockid, close, open, qty, cost from portfolio inner join '+
           '(select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
 						' from history'+
 						' order by stockid asc, day desc) t2'+
 						' on portfolio.stockid = t2.stockid'+
 						' where portfolio.userid = (select userid from users where username = ${username})) t1'+
             ' on stock.stockid = t1.stockid'+
-            ' where stockid = (select stockid from stock where stockname = ${stockname})', req.body)
+            ' where stock.stockid = (select stockid from stock where stockname = ${stockname})', req.body)
     .then(function (data) {
       res.status(200)
         .json({
