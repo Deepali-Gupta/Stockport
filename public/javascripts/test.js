@@ -1,6 +1,17 @@
 $(document).ready(function () {
     var table = $('#table_id').DataTable();
     loadStocks();
+    table.column( 0 ).visible( false );
+    table.on('click', 'tr', function () {
+        var data = table.row(this).data();
+        var stock = data[0];
+        console.log(stock);
+
+        // alert('Clicked row id ' + id);
+    });
+
+
+
     function loadStocks() {
         var url = "/api/stocks";
         $.getJSON(url, function (json) {
