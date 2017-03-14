@@ -21,17 +21,20 @@ create table stock (
 );
 
 \COPY stock FROM 'C:\Users\HD\Desktop\myapp\stocks.csv' DELIMITERS ',' CSV;
--- create table history (
--- 	histid serial PRIMARY KEY,
--- 	stockid int references stock(stockid),
--- 	day date YYYY-MM-DD not null, 
--- 	open real,
--- 	high real,
--- 	low real,
--- 	close real,
--- 	adj_close real,
--- 	volume bigint
--- );	
+
+create table history (
+	histid serial PRIMARY KEY,
+	stockid int references stock(stockid),
+	day date not null, 
+	open real,
+	high real,
+	low real,
+	close real,
+	volume bigint,
+	adj_close real
+);
+
+\COPY history FROM 'C:\Users\HD\Desktop\myapp\history.csv' DELIMITERS ',' CSV;
 
 -- create table user (
 -- 	userid serial PRIMARY KEY,
