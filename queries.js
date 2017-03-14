@@ -35,6 +35,43 @@ function getSinglePuppy(req, res, next) {
     });
 }
 
+function getSingleStock(req, res, next) {
+  db.one('select stockname, industry, close, open, high, low, volume'+
+         'from stock inner join ('+
+         'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
+         'from history order by stockid asc, day desc) t'+
+         'on stock.stockid=t.stockid where stockname = $1')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ONE stock'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getStockHist(req, res, next) {
+  db.any('select day, open, high, low, close, volume, adj_close'+
+         'from history'+
+         'where stockid = (select stockid from stock where stockname=$1)'+
+         'order by day desc')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ONE stock history'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getAllStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
           'from stock inner join ('+
@@ -225,6 +262,8 @@ module.exports = {
   getAllStocks: getTopStocks,
   getAllStocks: getLowStocks,
   getSinglePuppy: getSinglePuppy,
+  getSingleStock: getSingleStock,
+  getStockHist: getStockHist,
   createPuppy: createPuppy,
   //   updatePuppy: updatePuppy,
   //   removePuppy: removePuppy
