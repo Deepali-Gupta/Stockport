@@ -40,7 +40,7 @@ function getSingleStock(req, res, next) {
          'from stock inner join ('+
          'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
          'from history order by stockid asc, day desc) t'+
-         'on stock.stockid=t.stockid where stockname = $1')
+         'on stock.stockid=t.stockid where stockname = ${stockname}')
     .then(function (data) {
       res.status(200)
         .json({
@@ -57,7 +57,7 @@ function getSingleStock(req, res, next) {
 function getStockHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
          'from history'+
-         'where stockid = (select stockid from stock where stockname=$1)'+
+         'where stockid = (select stockid from stock where stockname=${stockname})'+
          'order by day desc')
     .then(function (data) {
       res.status(200)
@@ -174,7 +174,8 @@ function createLog(req, res, next) {
   req.body.trans_qty = parseInt(req.body.trans_qty);
   req.body.trans_date = Date(req.body.trans_date);
   db.none('insert into log(userid, stockid, trans_qty, trans_date)' +
-    'values((select userid from user where username = ${username}), (select stockid from stock where stockname = ${stockname}), ${trans_qty}, ${trans_date})',
+    'values((select userid from user where username = ${username}), '+
+    '(select stockid from stock where stockname = ${stockname}), ${trans_qty}, ${trans_date})',
     req.body)
     .then(function () {
       res.status(200)
@@ -192,7 +193,8 @@ function createPort(req, res, next) {
   req.body.qty = parseInt(req.body.qty);
   req.body.profit = parseFloat(req.body.profit);
   db.none('insert into portfolio(userid, stockid, qty, profit)' +
-    'values((select userid from user where username = ${username}), (select stockid from stock where stockname = ${stockname}), ${qty}, ${profit})',
+    'values((select userid from user where username = ${username}), '+
+    '(select stockid from stock where stockname = ${stockname}), ${qty}, ${profit})',
     req.body)
     .then(function () {
       res.status(200)
