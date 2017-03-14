@@ -60,5 +60,5 @@ create table portfolio (
 	userid int references users(userid),
 	stockid int references stock(stockid),
 	qty bigint,
-	profit real
+	cost real
 );

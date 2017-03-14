@@ -76,8 +76,9 @@ function getAllStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
           'from stock inner join ('+
           'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
-          'on stock.stockid=t.stockid')
+          'from history order by stockid asc, day desc ) t'+
+          'on stock.stockid=t.stockid'+
+          'where stockname <> \'Sensex\' ')
     .then(function (data) {
       res.status(200)
         .json({
@@ -95,8 +96,9 @@ function getTopStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
           'from stock inner join ('+
           'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
+          'from history order by stockid asc, day desc ) t'+
           'on stock.stockid=t.stockid'+
+          'where stockname <> \'Sensex\''+
           'order by perc desc limit 5')
     .then(function (data) {
       res.status(200)
@@ -115,8 +117,9 @@ function getLowStocks(req, res, next) {
   db.many('select stockname, industry, t.day as day, t.close as curr_price, (t.close-t.open) as diff, 100*(t.close-t.open)/t.open as perc'+
           'from stock inner join ('+
           'select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
-          'from history where stockname <> \'Sensex\' order by stockid asc, day desc ) t'+
+          'from history order by stockid asc, day desc ) t'+
           'on stock.stockid=t.stockid'+
+          'where stockname <> \'Sensex\''+
           'order by perc limit 5')
     .then(function (data) {
       res.status(200)
