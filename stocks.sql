@@ -38,7 +38,7 @@ create table users (
 
 create table log (
 	logid serial PRIMARY KEY,
-	userid int references user(userid),
+	userid int references users(userid),
 	stockid int references stock(stockid),
 	trans_qty bigint not null,
 	trans_date date not null

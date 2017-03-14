@@ -40,7 +40,7 @@ function getSingleStock(req, res, next) {
          ' from stock inner join ('+
          ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
          ' from history order by stockid asc, day desc) t'+
-         ' on stock.stockid=t.stockid where stockname = ${stockname}')
+         ' on stock.stockid=t.stockid where stockname = ${stockname}', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -57,7 +57,7 @@ function getSingleStock(req, res, next) {
 function getSensexPrice(req, res, next) {
   db.one('select distinct on (stockid) stockid, close, (close-open) as diff, 100*(close-open)/open as perc'+
          ' from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
-         ' order by stockid, day desc')
+         ' order by stockid, day desc', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -74,7 +74,7 @@ function getSensexPrice(req, res, next) {
 function getSensexHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
          ' from history where stockid = (select stockid from stock where stockname=\'Sensex\')'+
-         ' order by day desc')
+         ' order by day desc', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -91,8 +91,8 @@ function getSensexHist(req, res, next) {
 function getStockHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
          ' from history'+
-         ' where stockid = (select stockid from stock where stockname=${stockname})'+
-         ' order by day desc')
+         ' where stockid = (select stockid from stock where stockname=$1)'+
+         ' order by day desc',req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -112,7 +112,7 @@ function getAllStocks(req, res, next) {
           ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
           ' from history order by stockid asc, day desc ) t'+
           ' on stock.stockid=t.stockid'+
-          ' where stockname <> \'Sensex\' ')
+          ' where stockname <> \'Sensex\' ', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -133,7 +133,7 @@ function getTopStocks(req, res, next) {
           ' from history order by stockid asc, day desc ) t'+
           ' on stock.stockid=t.stockid'+
           ' where stockname <> \'Sensex\''+
-          ' order by perc desc limit 5')
+          ' order by perc desc limit 5', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -154,7 +154,7 @@ function getLowStocks(req, res, next) {
           ' from history order by stockid asc, day desc ) t'+
           ' on stock.stockid=t.stockid'+
           ' where stockname <> \'Sensex\''+
-          ' order by perc limit 5')
+          ' order by perc limit 5', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -171,7 +171,7 @@ function getLowStocks(req, res, next) {
 function getUserDetails(req, res, next) {
   db.one('select username, email, create_date'+
          ' from users'+
-         ' where username = ${username}')
+         ' where username = ${username}', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -194,7 +194,7 @@ function getPortStocks(req, res, next) {
 						' order by stockid asc, day desc) t2'+
 						' on portfolio.stockid = t2.stockid'+
 						' where portfolio.userid = (select userid from users where username = ${username})) t1'+
-            ' on stock.stockid = t1.stockid')
+            ' on stock.stockid = t1.stockid', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -218,7 +218,7 @@ function getPortStockDetails(req, res, next) {
 						' on portfolio.stockid = t2.stockid'+
 						' where portfolio.userid = (select userid from users where username = ${username})) t1'+
             ' on stock.stockid = t1.stockid'+
-            ' where stockid = (select stockid from stock where stockname = ${stockname})')
+            ' where stockid = (select stockid from stock where stockname = ${stockname})', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -238,7 +238,7 @@ function getTransHist(req, res, next) {
           ' on log.stockid = history.stockid'+
           ' and log.trans_date = history.day'+
           ' where log.userid = (select userid from users where username = ${username})'+
-          ' order by trans_date')
+          ' order by trans_date', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -364,15 +364,17 @@ function createPuppy(req, res, next) {
     });
 }
 
-function updatePuppy(req, res, next) {
-  db.none('update pups set name=$1, breed=$2, age=$3, sex=$4 where id=$5',
+function updateStock(req, res, next) {
+  db.none('update table stock set stockname = $1 '+
+		'industry = $2 '+
+	  'where stockname = ${stockname}',
     [req.body.name, req.body.breed, parseInt(req.body.age),
       req.body.sex, parseInt(req.params.id)])
     .then(function () {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Updated puppy'
+          message: 'Updated stock'
         });
     })
     .catch(function (err) {
@@ -398,14 +400,10 @@ function removePuppy(req, res, next) {
 }
 
 module.exports = {
-  getAllPuppies: getAllPuppies,
   getAllStocks: getAllStocks,
   getAllStocks: getTopStocks,
   getAllStocks: getLowStocks,
-  getSinglePuppy: getSinglePuppy,
   getSingleStock: getSingleStock,
   getStockHist: getStockHist,
-  createPuppy: createPuppy,
-  //   updatePuppy: updatePuppy,
-  //   removePuppy: removePuppy
+  
 };
