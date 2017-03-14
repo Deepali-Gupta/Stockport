@@ -13,10 +13,12 @@ router.get('/home',function(req,res, next) {
   res.sendFile(path.join(__dirname,'..','views','homepage.html' ));
 
 });
-router.get('/api/puppies', db.getAllPuppies);
 router.get('/api/stocks', db.getAllStocks);
-router.get('/api/puppies/:id', db.getSinglePuppy);
-router.post('/api/puppies', db.createPuppy);
+router.get('/api/topstocks',db.getTopStocks);
+router.get('/api/lowstocks',db.getLowStocks);
+
+// router.get('/api/puppies/:id', db.getSinglePuppy);
+// router.post('/api/puppies', db.createPuppy);
 // router.put('/api/puppies/:id', db.updatePuppy);
 // router.delete('/api/puppies/:id', db.removePuppy);
 

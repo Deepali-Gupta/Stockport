@@ -446,7 +446,6 @@ module.exports = {
   getTopStocks: getTopStocks,
   getLowStocks: getLowStocks,
   getSingleStock: getSingleStock,
-  getStockHist: getStockHist,
   getSensexPrice: getSensexPrice,
   getSensexHist: getSensexHist,
   getStockHist: getStockHist,

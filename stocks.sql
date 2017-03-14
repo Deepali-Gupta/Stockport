@@ -1,4 +1,4 @@
-drop database if exists stocks;
+﻿drop database if exists stocks;
 create database stocks;
 
 \c stocks;

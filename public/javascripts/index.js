@@ -1,8 +1,12 @@
 $(document).ready(function () {
-    var table = $('#table_id').DataTable();
+    var table_stocks = $('#table_stocks').DataTable();
+    var table_gainers = $('#table_gainers').DataTable();
+    var table_losers = $('#table_losers').DataTable();
     loadStocks();
-    table.column( 0 ).visible( false );
-    table.on('click', 'tr', function () {
+    loadTopGainers();
+    loadTopLosers();
+    // table_stocks.column(0).visible(false);
+    table_stocks.on('click', 'tr', function () {
         var data = table.row(this).data();
         var stock = data[0];
         console.log(stock);
@@ -23,12 +27,57 @@ $(document).ready(function () {
                 // tr.append("<td>" + json[i].stockname + "</td>");
                 // tr.append("<td>" + json[i].industry + "</td>");
                 // $('#table_id').append(tr);
-                table.row.add([
+                table_stocks.row.add([
                     json[i].stockname,
-                    json[i].industry
+                    json[i].industry,
+                    json[i].curr_price,
+                    json[i].diff,
+                    json[i].perc
                 ]);
             }
-            table.draw();
+            table_stocks.draw();
+        });
+    }
+    function loadTopGainers() {
+        var url = "/api/topstocks";
+        $.getJSON(url, function (json) {
+            // console.log(json);
+            var tr;
+            json = json.data;
+            for (var i = 0; i < json.length; i++) {
+                // tr = $('<tr/>');
+                // tr.append("<td>" + json[i].stockname + "</td>");
+                // tr.append("<td>" + json[i].industry + "</td>");
+                // $('#table_id').append(tr);
+                table_gainers.row.add([
+                    json[i].stockname,
+                    json[i].curr_price,
+                    json[i].diff,
+                    json[i].perc
+                ]);
+            }
+            table_gainers.draw();
+        });
+    }
+    function loadTopLosers() {
+        var url = "/api/lowstocks";
+        $.getJSON(url, function (json) {
+            // console.log(json);
+            var tr;
+            json = json.data;
+            for (var i = 0; i < json.length; i++) {
+                // tr = $('<tr/>');
+                // tr.append("<td>" + json[i].stockname + "</td>");
+                // tr.append("<td>" + json[i].industry + "</td>");
+                // $('#table_id').append(tr);
+                table_losers.row.add([
+                    json[i].stockname,
+                    json[i].curr_price,
+                    json[i].diff,
+                    json[i].perc
+                ]);
+            }
+            table_losers.draw();
         });
     }
     $("#form1").submit(function (event) {
