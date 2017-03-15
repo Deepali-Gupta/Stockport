@@ -156,6 +156,21 @@ function getUserDetails(req, res, next) {
     });
 }
 
+function getPassword(req, res, next) {
+  db.one('select password from users where username = ${username}', req.body)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved user password'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getPortStocks(req, res, next) {
   db.many('select stockname, close, (close - open) as diff, 100*(close - open)/open as perc, qty, (qty*close - cost) as profit'+
           ' from stock inner join '+
