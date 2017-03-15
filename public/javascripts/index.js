@@ -9,9 +9,18 @@ $(document).ready(function () {
     showSensexDetails();
     // table_stocks.column(0).visible(false);
     table_stocks.on('click', 'tr', function () {
-        var data = table.row(this).data();
+        var data = table_stocks.row(this).data();
         var stock = data[0];
         console.log(stock);
+        var url = "/api/stocks/"+stock;
+        $.getJSON(url, function (json) {
+            // console.log(json); 
+            json = json.data;
+            console.log(json);
+            // $('#sensex_index').text(json.close);
+            // $('#sensex_diff').text("diff = " + json.diff);
+            // $('#sensex_perc').text("perc = " + json.perc);
+        });
 
         // alert('Clicked row id ' + id);
     });

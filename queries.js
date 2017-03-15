@@ -9,7 +9,7 @@ function getSingleStock(req, res, next) {
          ' from stock inner join ('+
          ' select distinct on (stockid) stockid, day, open, high, low, close, volume, adj_close'+
          ' from history order by stockid asc, day desc) t'+
-         ' on stock.stockid=t.stockid where stockname = ${stockname}', req.body)
+         ' on stock.stockid=t.stockid where stockname = ${stockname}', req.params)
     .then(function (data) {
       res.status(200)
         .json({
@@ -27,7 +27,7 @@ function getStockHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
          ' from history'+
          ' where stockid = (select stockid from stock where stockname={stockname})'+
-         ' order by day desc',req.body)
+         ' order by day desc',req.params)
     .then(function (data) {
       res.status(200)
         .json({

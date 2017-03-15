@@ -16,13 +16,17 @@ router.get('/home',function(req,res, next) {
 
 router.get('/sensexview',function(req,res, next) {
   res.sendFile(path.join(__dirname,'..','views','sensexview.html' ));
-
 });
+
+router.get('/api/stocks/:stockname',db.getSingleStock);
+
+
 router.get('/api/stocks', db.getAllStocks);
 router.get('/api/topstocks',db.getTopStocks);
 router.get('/api/lowstocks',db.getLowStocks);
 router.get('/api/getsensexprice',db.getSensexPrice);
 router.get('/api/getsensexhist',db.getSensexHist);
+
 
 // router.get('/api/puppies/:id', db.getSinglePuppy);
 // router.post('/api/puppies', db.createPuppy);
