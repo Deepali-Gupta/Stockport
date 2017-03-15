@@ -44,6 +44,11 @@ router.get('/api/allusers', db.getAllUsers);
 router.post('/api/removeuser', db.removeUser);
 router.post('/api/updateuser',db.updateUser);
 
+// admin hub
+router.get('/admin', function(req,res,next) {
+  res.sendFile( path.join(__dirname,'..','views','adminhub.html' ));
+});
+
 // router.get('/api/puppies/:id', db.getSinglePuppy);
 // router.post('/api/puppies', db.createPuppy);
 // router.put('/api/puppies/:id', db.updatePuppy);
