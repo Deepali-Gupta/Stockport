@@ -303,8 +303,9 @@ function createPort(req, res, next) {
 }
 
 function createUser(req, res, next) {
+  console.log(req);
   db.none('insert into users(username, password, role, email)' +
-    ' values(${username},${password},${role} ${email})',
+    ' values(${username},${password},${role} ,${email})',
     req.body)
     .then(function () {
       res.status(200)

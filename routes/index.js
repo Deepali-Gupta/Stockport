@@ -14,6 +14,14 @@ router.get('/home',function(req,res, next) {
 
 });
 
+router.get('/register',function(req,res, next) {
+  res.sendFile(path.join(__dirname,'..','views','registration.html' ));
+});
+
+
+router.post('/register',db.createUser);
+
+
 router.get('/sensexview',function(req,res, next) {
   res.sendFile(path.join(__dirname,'..','views','sensexview.html' ));
 });
