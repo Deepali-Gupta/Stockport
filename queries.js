@@ -171,19 +171,25 @@ function getUserDetails(req, res, next) {
     });
 }
 
-function getPassword(req, res, next) {
-  db.one('select password from users where username = ${username}', req.body)
+function getPassword(username, password) {
+  db.one('select *' +
+    ' from users' +
+    ' where username = ${username} and password = {$password} ', req.body)
     .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
           data: data,
-          message: 'Retrieved user password'
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(200)
+        .json({
+          status: 'failure',
+          data: data,
+        });
     });
+
 }
 
 function getPortStocks(req, res, next) {
@@ -234,15 +240,15 @@ function getPortStockDetails(req, res, next) {
 }
 
 function getPortNetValue(req, res, next) {
-  db.one('select sum(qty*close) as net_value, sum(qty*close) - sum(cost) as profit '+
-         'from ('+
-		'select distinct on (stockid) stockid, close '+
-		'from history '+
-		'order by stockid asc, day desc '+
-	 ') t inner join portfolio '+
-'on t.stockid = portfolio.stockid '+
-'where portfolio.userid=(select userid from users where username=${username}) '+
-'group by userid', req.body)
+  db.one('select sum(qty*close) as net_value, sum(qty*close) - sum(cost) as profit ' +
+    'from (' +
+    'select distinct on (stockid) stockid, close ' +
+    'from history ' +
+    'order by stockid asc, day desc ' +
+    ') t inner join portfolio ' +
+    'on t.stockid = portfolio.stockid ' +
+    'where portfolio.userid=(select userid from users where username=${username}) ' +
+    'group by userid', req.body)
     .then(function (data) {
       res.status(200)
         .json({
@@ -431,7 +437,7 @@ function updateUser(req, res, next) {
         });
     })
     .catch(function (err) {
-     res.status(200)
+      res.status(200)
         .json({
           status: 'failure',
           message: err.details
@@ -511,6 +517,7 @@ function removePort(req, res, next) {
 }
 
 module.exports = {
+  getPassword: getPassword,
   getAllStocks: getAllStocks,
   getTopStocks: getTopStocks,
   getLowStocks: getLowStocks,
