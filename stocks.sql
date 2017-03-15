@@ -65,3 +65,12 @@ create trigger refresh_mat_view
 after insert or update or delete or truncate
 on log for each statement 
 execute procedure refresh_mat_view();
+
+alter table history drop constraint history_stockid_fkey;
+alter table history add foreign key(stockid) references stock(stockid) on delete cascade;
+
+alter table log drop constraint log_stockid_fkey;
+alter table log add foreign key(stockid) references stock(stockid) on delete cascade;
+
+alter table log drop constraint log_userid_fkey;
+alter table log add foreign key(userid) references users(userid) on delete cascade;
