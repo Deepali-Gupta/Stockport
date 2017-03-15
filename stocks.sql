@@ -43,14 +43,6 @@ create table log (
 	trans_date date not null
 );
 
-create table portfolio (
-	portid serial PRIMARY KEY,
-	userid int references users(userid),
-	stockid int references stock(stockid),
-	qty bigint,
-	cost real
-);
-
 create materialized view portfolio as 
 (select userid, log.stockid, sum(trans_qty) as qty, sum(trans_qty*close) as cost
 from log inner join history
