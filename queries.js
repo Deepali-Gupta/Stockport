@@ -209,6 +209,7 @@ function getTransHist(req, res, next) {
           ' on log.stockid = history.stockid'+
           ' and log.trans_date = history.day'+
           ' where log.userid = (select userid from users where username = ${username})'+
+          ' and log.stockid = (select stockid from stock where stockname = ${stockname})'+
           ' order by trans_date', req.body)
     .then(function (data) {
       res.status(200)
@@ -318,7 +319,7 @@ function createUser(req, res, next) {
 }
 
 function updateStock(req, res, next) {
-  db.none('update table stock set stockname = ${stockname1} '+
+  db.none('update stock set stockname = ${stockname1}, '+
 		'industry = ${industry} '+
 	  'where stockname = ${stockname2}',
     [req.body])
@@ -335,7 +336,7 @@ function updateStock(req, res, next) {
 }
 
 function updatePort(req, res, next) {
-  db.none('update table portfolio '+
+  db.none('update portfolio '+
 	'set qty = qty + ${qty} '+
 		'cost = cost + ${qty} * '+
 		'(select close from history where stockid = '+
@@ -357,10 +358,10 @@ function updatePort(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  db.none('update table users '+
-	'set username = ${username2} '+
-		'password = ${password} '+
-		'role = ${role} '+
+  db.none('update users '+
+	'set username = ${username2}, '+
+		'password = ${password}, '+
+		'role = ${role}, '+
 		'email = ${email} '+
 	'where username = ${username1}',
     [req.body])
