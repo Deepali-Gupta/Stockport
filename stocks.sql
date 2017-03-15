@@ -49,3 +49,19 @@ from log inner join history
 on log.stockid=history.stockid
 and log.trans_date=history.day
 group by userid, log.stockid);
+
+create index on history using btree (stockid);
+create index on log using btree (stockid);
+
+create function refresh_mat_view()
+returns trigger language plpgsql
+as $$
+begin
+    refresh materialized view portfolio;
+    return null;
+end $$;
+
+create trigger refresh_mat_view
+after insert or update or delete or truncate
+on log for each statement 
+execute procedure refresh_mat_view();
