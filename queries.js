@@ -171,6 +171,21 @@ function getUserDetails(req, res, next) {
     });
 }
 
+function getPassword(req, res, next) {
+  db.one('select password from users where username = ${username}', req.body)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved user password'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getPortStocks(req, res, next) {
   db.many('select stockname, close, (close - open) as diff, 100*(close - open)/open as perc, qty, (qty*close - cost) as profit' +
     ' from stock inner join ' +
@@ -211,6 +226,29 @@ function getPortStockDetails(req, res, next) {
           status: 'success',
           data: data,
           message: 'Retrieved portfolio stock details of one user and one stock'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getPortNetValue(req, res, next) {
+  db.one('select sum(qty*close) as net_value, sum(qty*close) - sum(cost) as profit '+
+         'from ('+
+		'select distinct on (stockid) stockid, close '+
+		'from history '+
+		'order by stockid asc, day desc '+
+	 ') t inner join portfolio '+
+'on t.stockid = portfolio.stockid '+
+'where portfolio.userid=(select userid from users where username=${username}) '+
+'group by userid', req.body)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved portfolio net value for a user'
         });
     })
     .catch(function (err) {
