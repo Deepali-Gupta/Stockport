@@ -43,9 +43,9 @@
     <div class="container">
         <div class="jumbotron">
             <h6>Sensex Index</h6>
-            <h1 id = "sensex_index"></h1>
-            <p id = "sensex_diff" class="lead"></p>
-            <p id = "sensex_perc" class="lead"></p>
+            <h1 id="sensex_index"></h1>
+            <p id="sensex_diff" class="lead"></p>
+            <p id="sensex_perc" class="lead"></p>
             <p><a class="btn btn-lg btn-success" href="#" role="button">DashBoard</a></p>
         </div>
         <!-- Example row of columns -->
@@ -94,6 +94,32 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <!-- stock detail table-->
+        
+        <div id="stock_div">
+            <div class="jumbotron">
+                <h5>Individual Stock Details</h5>
+                <h1 id="stock_name"></h1>
+                <p id="stock_industry" class="lead"></p>
+                <!--<p id="sensex_perc" class="lead"></p>-->
+            </div>
+            <table id="table_stock_detail" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                        <th>Volume</th>
+                        <th>Adj_close</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
     </div>
 </body>
 

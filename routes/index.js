@@ -18,8 +18,8 @@ router.get('/sensexview',function(req,res, next) {
   res.sendFile(path.join(__dirname,'..','views','sensexview.html' ));
 });
 
-router.get('/api/stocks/:stockname',db.getSingleStock);
-
+router.get('/api/stockdetail/:stockname',db.getSingleStock);
+router.get('/api/stockhist/:stockname',db.getStockHist);
 
 router.get('/api/stocks', db.getAllStocks);
 router.get('/api/topstocks',db.getTopStocks);

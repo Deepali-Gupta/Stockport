@@ -26,7 +26,7 @@ function getSingleStock(req, res, next) {
 function getStockHist(req, res, next) {
   db.any('select day, open, high, low, close, volume, adj_close'+
          ' from history'+
-         ' where stockid = (select stockid from stock where stockname={stockname})'+
+         ' where stockid = (select stockid from stock where stockname= ${stockname})'+
          ' order by day desc',req.params)
     .then(function (data) {
       res.status(200)

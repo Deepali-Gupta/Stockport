@@ -2,6 +2,9 @@ $(document).ready(function () {
     var table_stocks = $('#table_stocks').DataTable();
     var table_gainers = $('#table_gainers').DataTable();
     var table_losers = $('#table_losers').DataTable();
+    var table_stock_detail = $('#table_stock_detail').DataTable();
+    var stock_div = $('#stock_div');
+    stock_div.hide();
     $('#sensex_index').click(showSensexPage);
     loadStocks();
     loadTopGainers();
@@ -9,20 +12,46 @@ $(document).ready(function () {
     showSensexDetails();
     // table_stocks.column(0).visible(false);
     table_stocks.on('click', 'tr', function () {
+        //populate table_stock_details
         var data = table_stocks.row(this).data();
         var stock = data[0];
         console.log(stock);
-        var url = "/api/stocks/"+stock;
-        $.getJSON(url, function (json) {
-            // console.log(json); 
+        var url1 = "/api/stockdetail/" + stock;
+        var url2 = "/api/stockhist/" + stock;
+        $.getJSON(url1, function (json) {
             json = json.data;
             console.log(json);
-            // $('#sensex_index').text(json.close);
-            // $('#sensex_diff').text("diff = " + json.diff);
+            $('#stock_name').text(json.stockname);
+            $('#stock_industry').text("Industry = " + json.industry);
             // $('#sensex_perc').text("perc = " + json.perc);
         });
+        $.getJSON(url2, function (json) {
+            // console.log(json); 
+            json = json.data;
+            // console.log(json);
+            table_stock_detail.clear();
+            for (var i = 0; i < json.length; i++) {
+                table_stock_detail.row.add([
 
-        // alert('Clicked row id ' + id);
+                    json[i].day,
+                    json[i].open,
+                    json[i].high,
+                    json[i].low,
+                    json[i].close,
+                    json[i].volume,
+                    json[i].adj_close
+                ]);
+            }
+
+            table_stock_detail.draw();
+
+        });
+        stock_div.show();
+
+        $('html, body').animate({
+            scrollTop: stock_div.offset().top
+        }, 1000);
+        
     });
 
     function showSensexDetails() {
