@@ -36,6 +36,14 @@ router.get('/api/getsensexprice',db.getSensexPrice);
 router.get('/api/getsensexhist',db.getSensexHist);
 
 
+//users
+router.get('/api/useroperations', function(req,res,next) {
+  res.sendFile( path.join(__dirname,'..','views','useroperations.html' ));
+});
+router.get('/api/allusers', db.getAllUsers);
+router.post('/api/removeuser', db.removeUser);
+router.post('/api/updateuser',db.updateUser);
+
 // router.get('/api/puppies/:id', db.getSinglePuppy);
 // router.post('/api/puppies', db.createPuppy);
 // router.put('/api/puppies/:id', db.updatePuppy);

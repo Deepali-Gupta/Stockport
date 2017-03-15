@@ -12,6 +12,7 @@ $(document).ready(function () {
         var posting = $.post(url, { username: n, password: p, role:"member", email: e });
         posting.done(function (data) {
             console.log(data);
+            // TODO
         });
     });
 });
