@@ -203,6 +203,29 @@ function getPortStockDetails(req, res, next) {
     });
 }
 
+function getPortNetValue(req, res, next) {
+  db.one('select sum(qty*close) as net_value, sum(qty*close) - sum(cost) as profit '+
+         'from ('+
+		'select distinct on (stockid) stockid, close '+
+		'from history '+
+		'order by stockid asc, day desc '+
+	 ') t inner join portfolio '+
+'on t.stockid = portfolio.stockid '+
+'where portfolio.userid=(select userid from users where username=${username}) '+
+'group by userid', req.body)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved portfolio net value for a user'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getTransHist(req, res, next) {
   db.many('select trans_qty, trans_date, close '+
           'from log inner join history'+
