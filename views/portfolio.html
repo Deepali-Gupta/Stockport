@@ -40,8 +40,49 @@
             </ul>
         </div>
     </nav>
-        
+    <div class="container">
+        <div class="jumbotron">
+            <h6>Portfolio Value</h6>
+            <h1 id="portfolio_value"></h1>
+            <p id="portfolio_profit" class="lead"></p>
+            <!--<p id="sensex_perc" class="lead"></p>-->
+        </div>
+        <!-- price table-->
+        <table id="table_portfolio_stocks" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Stockname</th>
+                    <th>Last Price</th>
+                    <th>Change</th>
+                    <th>Percentage Change</th>
+                    <th>Qty</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- stock detail table-->
+    <!--hidden initially-->
+    <div id="portfolio_stock_div">
+        <div class="jumbotron">
+            <h5>Individual Stock in Portfolio</h5>
+            <h1 id="stock_name"></h1>
+            <p id="stock_industry" class="lead"></p>
+            <!--<p id="sensex_perc" class="lead"></p>-->
+        </div>
+        <table id="table_portfolio_stock_detail" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
+    </div>
 
 
 

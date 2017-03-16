@@ -156,7 +156,7 @@ $(document).ready(function () {
         });
     });
     $('#portfolio_button').click(function () {
-        console.log("pressed");
+        console.log("portfolio_button pressed");
         $.getJSON("/isloggedin", function (data) {
             console.log(data);
             if(data == true){

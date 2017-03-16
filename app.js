@@ -5,9 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var flash = require('express-flash');
 var routes = require('./routes/index');
 var login = require('./routes/login');
+var portfolio = require('./routes/portfolio');
 
 
 var app = express();
@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
   if(req.session.authenticated){
     req.body.username = req.session.username;
+    // req.params.username = req.session.username;
     console.log("USER "+ req.body.username +" LOGGED IN");
   }
   else{
@@ -46,6 +47,7 @@ app.use(function (req, res, next) {
 //add routes
 app.use('/', routes);
 app.use('/login', login);
+app.use('/portfolio', portfolio);
 
 
 

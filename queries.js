@@ -239,6 +239,27 @@ function getPortStockDetails(req, res, next) {
     });
 }
 
+function getTransHist(req, res, next) {
+  db.many('select trans_qty, trans_date, close ' +
+    'from log inner join history' +
+    ' on log.stockid = history.stockid' +
+    ' and log.trans_date = history.day' +
+    ' where log.userid = (select userid from users where username = ${username})' +
+    ' and log.stockid = (select stockid from stock where stockname = ${stockname})' +
+    ' order by trans_date', req.body)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved transaction history of one stock for one user'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getPortNetValue(req, res, next) {
   db.one('select sum(qty*close) as net_value, sum(qty*close) - sum(cost) as profit ' +
     'from (' +
@@ -262,26 +283,6 @@ function getPortNetValue(req, res, next) {
     });
 }
 
-function getTransHist(req, res, next) {
-  db.many('select trans_qty, trans_date, close ' +
-    'from log inner join history' +
-    ' on log.stockid = history.stockid' +
-    ' and log.trans_date = history.day' +
-    ' where log.userid = (select userid from users where username = ${username})' +
-    ' and log.stockid = (select stockid from stock where stockname = ${stockname})' +
-    ' order by trans_date', req.body)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved transaction history of one stock for one user'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
 
 function createStock(req, res, next) {
   db.none('insert into stock(stockname, industry)' +
@@ -529,6 +530,7 @@ module.exports = {
   getUserDetails: getUserDetails,
   getPortStocks: getPortStocks,
   getPortStockDetails: getPortStockDetails,
+  getPortNetValue: getPortNetValue,
   getTransHist: getTransHist,
   createStock: createStock,
   createHist: createHist,

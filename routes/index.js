@@ -54,20 +54,6 @@ router.get('/isloggedin', function (req, res, next) {
 });
 
 
-
-// portfolio api
-router.get('/portfolio', function (req, res, next) {
-  if (req.session.authenticated) {
-    res.sendFile(path.join(__dirname, '..', 'views', 'portfolio.html'));
-  }
-  else {
-    res.send({ status: "failure" });
-    // res.redirect('/');
-  }
-
-});
-
-
 // admin hub
 router.get('/admin', function (req, res, next) {
   res.sendFile(path.join(__dirname, '..', 'views', 'adminhub.html'));
