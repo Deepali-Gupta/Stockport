@@ -14,6 +14,11 @@ router.get('/home',function(req,res, next) {
 
 });
 
+// router.get('/addflash', function (req, res) {
+//   req.flash('info', 'Flash Message Added');
+//   res.redirect('/');
+// });
+
 router.get('/register',function(req,res, next) {
   res.sendFile(path.join(__dirname,'..','views','registration.html' ));
 });

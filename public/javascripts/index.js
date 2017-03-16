@@ -66,7 +66,7 @@ $(document).ready(function () {
         });
     }
     function showSensexPage() {
-        window.location = "/sensexview"
+        window.location = "/sensexview";
     }
 
 

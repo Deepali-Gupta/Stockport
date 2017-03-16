@@ -171,23 +171,23 @@ function getUserDetails(req, res, next) {
     });
 }
 
-function getPassword(username, password) {
+function authenticate(req,res,next) {
+  // set session variables
+  console.log(req.body);
   db.one('select *' +
     ' from users' +
-    ' where username = ${username} and password = {$password} ', req.body)
+    ' where username = ${username} and password = ${password} ', req.body)
     .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-        });
+      // console.log(data);
+      req.session.authenticated = true;
+      req.session.username = data.username;
+      req.session.role = data.role;
+      next();
     })
     .catch(function (err) {
-      res.status(200)
-        .json({
-          status: 'failure',
-          data: data,
-        });
+      // console.log(err);
+      req.session.authenticated = false;
+      next();
     });
 
 }
@@ -517,7 +517,7 @@ function removePort(req, res, next) {
 }
 
 module.exports = {
-  getPassword: getPassword,
+  authenticate: authenticate,
   getAllStocks: getAllStocks,
   getTopStocks: getTopStocks,
   getLowStocks: getLowStocks,
