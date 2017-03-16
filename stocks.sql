@@ -79,3 +79,10 @@ alter table log drop constraint log_userid_fkey;
 alter table log add foreign key(userid) references users(userid) on delete cascade;
 
 --access privileges
+create role admin;
+grant all on stock, users, history, log to admin;
+create role member;
+grant select, insert, update on log to member;
+grant select, insert on history to member;
+create role guest;
+grant select on stock, history to guest;
