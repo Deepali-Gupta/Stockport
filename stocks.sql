@@ -79,7 +79,27 @@ alter table log drop constraint log_userid_fkey;
 alter table log add foreign key(userid) references users(userid) on delete cascade;
 
 --access privileges
-grant all ON table stock, users, log, history to admin;
-grant select on table stock , history to guest;
-grant update, insert on table log to member;
-grant insert on table history to member;
+
+create role admin;
+grant all on stock, users, history, log to admin;
+create role member;
+grant select, insert, update on log to member;
+grant select, insert on history to member;
+create role guest;
+grant select on stock, history to guest;
+
+create user dg with role admin;
+create user hd with role member;
+create user gupta with role guest;
+
+alter role admin with login;
+alter role member with login;
+alter role guest with login;
+
+alter role dg with password='pass'
+alter role hd with password='pass'
+alter role gupta with password='pass'
+
+psql dg -h 127.0.0.1 -d stocks
+psql hd -h 127.0.0.1 -d stocks
+psql gupta -h 127.0.0.1 -d stocks
