@@ -11,7 +11,6 @@ $(document).ready(function () {
         var url = "/portfolio/getnetvalue";
         $.getJSON(url, function (json) {
             // console.log(json);
-
             json = json.data;
             $('#portfolio_value').text(json.net_value);
             $('#portfolio_profit').text("Net profit : " + json.profit);
@@ -23,10 +22,6 @@ $(document).ready(function () {
             // console.log(json);
             json = json.data;
             for (var i = 0; i < json.length; i++) {
-                // tr = $('<tr/>');
-                // tr.append("<td>" + json[i].stockname + "</td>");
-                // tr.append("<td>" + json[i].industry + "</td>");
-                // $('#table_id').append(tr);
                 table_portfolio_stocks.row.add([
                     json[i].stockname,
                     json[i].close,

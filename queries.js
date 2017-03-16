@@ -171,7 +171,7 @@ function getUserDetails(req, res, next) {
     });
 }
 
-function authenticate(req,res,next) {
+function authenticate(req, res, next) {
   // set session variables
   console.log(req.body);
   db.one('select *' +
@@ -343,25 +343,6 @@ function createLog(req, res, next) {
     });
 }
 
-function createPort(req, res, next) {
-  req.body.qty = parseInt(req.body.qty);
-  req.body.profit = parseFloat(req.body.profit);
-  db.none('insert into portfolio(userid, stockid, qty, cost)' +
-    'values((select userid from user where username = ${username}), ' +
-    '(select stockid from stock where stockname = ${stockname}), ${qty}, ${cost})',
-    req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one user portfolio entry'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
 function createUser(req, res, next) {
   console.log(req);
   db.none('insert into users(username, password, role, email)' +
@@ -400,13 +381,14 @@ function updateStock(req, res, next) {
     });
 }
 
+//MODIFY THIS QUERY
 function updatePort(req, res, next) {
   db.none('update portfolio ' +
     'set qty = qty + ${qty} ' +
     'cost = cost + ${qty} * ' +
     '(select close from history where stockid = ' +
     '(select stockid from stock where stockname=${stockname})' +
-    'and day = ${day} )' +
+    ' and day = ${day} )' +
     ' where stockid = (select stockid from stock where stockname=${stockname})' +
     ' and userid = (select userid from users where username=${username})',
     req.body)
@@ -535,7 +517,6 @@ module.exports = {
   createStock: createStock,
   createHist: createHist,
   createLog: createLog,
-  createPort: createPort,
   createUser: createUser,
   updateStock: updateStock,
   updatePort: updatePort,

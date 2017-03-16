@@ -1,13 +1,11 @@
 $(document).ready(function () {
     var table_sensex = $('#table_sensex').DataTable();
 
-    loadTable();
+    loadTableAndChart();
     showSensexDetails();
-
-    function loadTable() {
+    function loadTableAndChart() {
         var url = "/api/getsensexhist";
         $.getJSON(url, function (json) {
-
             json = json.data;
             for (var i = 0; i < json.length; i++) {
                 table_sensex.row.add([
@@ -19,8 +17,11 @@ $(document).ready(function () {
                     json[i].volume,
                     json[i].adj_close
                 ]);
+                chart.options.data[0].dataPoints.push({ y: json[i].close });
             }
+            chart.options.data[0].dataPoints.reverse();
             table_sensex.draw();
+            chart.render();
         });
     }
     function showSensexDetails() {
@@ -34,5 +35,28 @@ $(document).ready(function () {
             $('#sensex_perc').text("perc = " + json.perc);
         });
     }
+    var chart = new CanvasJS.Chart("chartContainer",
+        {
+            title: {
+                text: "Sensex Value over last 3 months"
+            },
+            theme: "theme2",
+            animationEnabled: true,
+            axisX: {
+                valueFormatString: ""
+            },
+            axisY: {
+                valueFormatString: "#0",
+                includeZero: false
+            },
+            data: [
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "Index Value",
+                    dataPoints: []
+                }
+            ]
+        });
 
 });

@@ -20,38 +20,45 @@ $(document).ready(function () {
         var url2 = "/api/stockhist/" + stock;
         $.getJSON(url1, function (json) {
             json = json.data;
-            console.log(json);
+            // console.log(json);
             $('#stock_name').text(json.stockname);
             $('#stock_industry').text("Industry = " + json.industry);
             // $('#sensex_perc').text("perc = " + json.perc);
         });
         $.getJSON(url2, function (json) {
-            // console.log(json); 
+            console.log(json);
             json = json.data;
+            chart.options.data[0].dataPoints = [];
             // console.log(json);
             table_stock_detail.clear();
             for (var i = 0; i < json.length; i++) {
                 table_stock_detail.row.add([
-
                     json[i].day,
                     json[i].open,
                     json[i].high,
                     json[i].low,
                     json[i].close,
                     json[i].volume,
-                    json[i].adj_close
+                    json[i].adj_close,
+                    chart.options.data[0].dataPoints.push({ y: json[i].close })
                 ]);
             }
 
+            stock_div.show();
+            $('html, body').animate({
+                scrollTop: stock_div.offset().top
+            }, 800);
             table_stock_detail.draw();
+            chart.options.data[0].dataPoints.reverse();
+            chart.render();
 
         });
-        stock_div.show();
 
-        $('html, body').animate({
-            scrollTop: stock_div.offset().top
-        }, 1000);
-        
+
+
+
+
+
     });
 
     function showSensexDetails() {
@@ -134,35 +141,14 @@ $(document).ready(function () {
             table_losers.draw();
         });
     }
-    $("#form1").submit(function (event) {
-
-        // Stop form from submitting normally
-        event.preventDefault();
-
-        // Get some values from elements on the page:
-        var form = $(this),
-            n = form.find("input[name='name']").val(),
-            b = form.find("input[name = 'breed']").val(),
-            a = form.find("input[name = 'age']").val(),
-            s = form.find("input[name = 'sex']").val(),
-            url = form.attr("action");
-
-        // Send the data using post
-        var posting = $.post(url, { name: n, breed: b, age: a, sex: s });
-
-        // Put the results in a div
-        posting.done(function (data) {
-            console.log(data);
-        });
-    });
     $('#portfolio_button').click(function () {
         console.log("portfolio_button pressed");
         $.getJSON("/isloggedin", function (data) {
             console.log(data);
-            if(data == true){
+            if (data == true) {
                 window.location = '/portfolio'
             }
-            else{
+            else {
                 alert("No user logged in");
             }
         });
@@ -184,5 +170,32 @@ $(document).ready(function () {
         //         console.log(data);
         //     });
     });
+    var chart = new CanvasJS.Chart("chartContainer",
+        {
+            title: {
+                text: "Stock Value"
+            },
+            theme: "theme2",
+            animationEnabled: true,
+            axisX: {
+                valueFormatString: "",
+                includeZero: false
+            },
+            axisY: {
+                valueFormatString: "#0",
+                includeZero: false
+            },
+            data: [
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "Stock Value",
+                    dataPoints: []
+                }
+            ]
+        });
+
+
+
 
 });

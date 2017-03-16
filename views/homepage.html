@@ -13,6 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="javascripts/homepage.js"></script>
 </head>
 
@@ -47,7 +48,7 @@
             <h1 id="sensex_index"></h1>
             <p id="sensex_diff" class="lead"></p>
             <p id="sensex_perc" class="lead"></p>
-            <p><a class="btn btn-lg btn-success" role="button" id = "portfolio_button">DashBoard</a></p>
+            <p><a class="btn btn-lg btn-success" role="button" id="portfolio_button">DashBoard</a></p>
         </div>
         <!-- Example row of columns -->
         <div class="row">
@@ -98,13 +99,17 @@
 
         <!-- stock detail table-->
         <!--hidden initially-->
+
         <div id="stock_div">
+            
             <div class="jumbotron">
                 <h5>Individual Stock Details</h5>
                 <h1 id="stock_name"></h1>
                 <p id="stock_industry" class="lead"></p>
                 <!--<p id="sensex_perc" class="lead"></p>-->
             </div>
+            <div  id="chartContainer" style="width:100%; height:280px"></div>
+           
             <table id="table_stock_detail" class="table table-striped">
                 <thead>
                     <tr>

@@ -19,6 +19,6 @@ router.get('/', function (req, res, next) {
 
 router.get('/getnetvalue',db.getPortNetValue);
 router.get('/getportstocks',db.getPortStocks);
-// router.get('/getportstockdetails', db.getPortStockDetails );
 router.post('/gettranshist',db.getTransHist);
+router.post('/updateportfolio',db.createLog);
 module.exports = router;
