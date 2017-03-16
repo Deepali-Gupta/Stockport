@@ -16,10 +16,10 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', db.authenticate, function (req, res, next) {
-    console.log("-------------------login post method called------------------");
+    // console.log("-------------------login post method called------------------");
     // console.log("++++++++++++++++++++",req.body.username);
     // req.session.user = req.body.username;
-    console.log("--------------++++++++++++-------", req.session.authenticated);
+    // console.log("--------------++++++++++++-------", req.session.authenticated);
     if (req.session.authenticated) {
         res.send({ authenticated: true });
         next();
@@ -28,15 +28,8 @@ router.post('/', db.authenticate, function (req, res, next) {
         res.send({ authenticated: false });
         next();
     }
-    // res.redirect('../home');
 });
 
 
-// router.get('/logout', function(req, res){
-//     req.session.destroy(function(){
-//         console.log("user logged out.")
-//     });
-//     res.redirect('/login');
-// });
 
 module.exports = router;

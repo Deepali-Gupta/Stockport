@@ -30,6 +30,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//add session information in body
+app.use(function (req, res, next) {
+  if(req.session.authenticated){
+    req.body.username = req.session.username;
+    console.log("USER "+ req.body.username +" LOGGED IN");
+  }
+  else{
+    console.log("NO USER LOGGED IN");
+  }
+  next();
+});
+
 
 //add routes
 app.use('/', routes);

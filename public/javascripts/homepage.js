@@ -155,27 +155,34 @@ $(document).ready(function () {
             console.log(data);
         });
     });
-    // $('button').click(function () {
-    //     console.log("pressed");
-    //     // $.getJSON("/api/puppies", function (json) {
-    //     //     console.log(json);
-    //     // });
-    //     // var url = "/api/puppies";
-    //     // $.getJSON(url, function (json) {
-    //     //     console.log(json);
-    //     //     var tr;
-    //     //     json = json.data;
-    //     //     for (var i = 0; i < json.length; i++) {
-    //     //         tr = $('<tr/>');
-    //     //         tr.append("<td>" + json[i].name + "</td>");
-    //     //         tr.append("<td>" + json[i].sex+ "</td>");
-    //     //         $('table').append(tr);
-    //     //     }
-    //     // });
-    //     // table.draw();
-    //     $.post("api/puppies/", { name: "John", breed: "dd", age: "2", sex: "M" })
-    //         .done(function (data) {
-    //             console.log(data);
-    //         });
+    $('#portfolio_button').click(function () {
+        console.log("pressed");
+        $.getJSON("/isloggedin", function (data) {
+            console.log(data);
+            if(data == true){
+                window.location = '/portfolio'
+            }
+            else{
+                alert("No user logged in");
+            }
+        });
+        // var url = "/api/puppies";
+        // $.getJSON(url, function (json) {
+        //     console.log(json);
+        //     var tr;
+        //     json = json.data;
+        //     for (var i = 0; i < json.length; i++) {
+        //         tr = $('<tr/>');
+        //         tr.append("<td>" + json[i].name + "</td>");
+        //         tr.append("<td>" + json[i].sex+ "</td>");
+        //         $('table').append(tr);
+        //     }
+        // });
+        // table.draw();
+        // $.post("api/puppies/", { name: "John", breed: "dd", age: "2", sex: "M" })
+        //     .done(function (data) {
+        //         console.log(data);
+        //     });
+    });
 
 });
