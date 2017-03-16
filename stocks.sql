@@ -86,3 +86,19 @@ grant select, insert, update on log to member;
 grant select, insert on history to member;
 create role guest;
 grant select on stock, history to guest;
+
+create user dg with role admin;
+create user hd with role member;
+create user gupta with role guest;
+
+alter role admin with login;
+alter role member with login;
+alter role guest with login;
+
+alter role dg with password='pass'
+alter role hd with password='pass'
+alter role gupta with password='pass'
+
+psql dg -h 127.0.0.1 -d stocks
+psql hd -h 127.0.0.1 -d stocks
+psql gupta -h 127.0.0.1 -d stocks
