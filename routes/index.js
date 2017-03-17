@@ -34,6 +34,7 @@ router.get('/api/topstocks', db.getTopStocks);
 router.get('/api/lowstocks', db.getLowStocks);
 router.get('/api/getsensexprice', db.getSensexPrice);
 router.get('/api/getsensexhist', db.getSensexHist);
+router.get('/api/allstocks', db.getAllStocks);
 
 
 //users

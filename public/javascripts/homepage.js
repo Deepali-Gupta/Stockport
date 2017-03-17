@@ -40,7 +40,7 @@ $(document).ready(function () {
                     json[i].close,
                     json[i].volume,
                     json[i].adj_close,
-                    chart.options.data[0].dataPoints.push({ y: json[i].close })
+                    chart.options.data[0].dataPoints.push({ y: parseInt( json[i].close ) })
                 ]);
             }
 
@@ -53,12 +53,6 @@ $(document).ready(function () {
             chart.render();
 
         });
-
-
-
-
-
-
     });
 
     function showSensexDetails() {
@@ -68,8 +62,8 @@ $(document).ready(function () {
             json = json.data;
             console.log(json);
             $('#sensex_index').text(json.close);
-            $('#sensex_diff').text("diff = " + json.diff);
-            $('#sensex_perc').text("perc = " + json.perc);
+            $('#sensex_diff').text("Change = " + json.diff);
+            $('#sensex_perc').text("Percentage Change = " + json.perc + " %");
         });
     }
     function showSensexPage() {
@@ -144,7 +138,7 @@ $(document).ready(function () {
     $('#portfolio_button').click(function () {
         console.log("portfolio_button pressed");
         $.getJSON("/isloggedin", function (data) {
-            console.log(data);
+            // console.log(data);
             if (data == true) {
                 window.location = '/portfolio'
             }
@@ -152,23 +146,6 @@ $(document).ready(function () {
                 alert("No user logged in");
             }
         });
-        // var url = "/api/puppies";
-        // $.getJSON(url, function (json) {
-        //     console.log(json);
-        //     var tr;
-        //     json = json.data;
-        //     for (var i = 0; i < json.length; i++) {
-        //         tr = $('<tr/>');
-        //         tr.append("<td>" + json[i].name + "</td>");
-        //         tr.append("<td>" + json[i].sex+ "</td>");
-        //         $('table').append(tr);
-        //     }
-        // });
-        // table.draw();
-        // $.post("api/puppies/", { name: "John", breed: "dd", age: "2", sex: "M" })
-        //     .done(function (data) {
-        //         console.log(data);
-        //     });
     });
     var chart = new CanvasJS.Chart("chartContainer",
         {
@@ -194,8 +171,4 @@ $(document).ready(function () {
                 }
             ]
         });
-
-
-
-
 });

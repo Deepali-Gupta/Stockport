@@ -7,6 +7,8 @@ var db = require('../queries');
 router.use(function (req, res, next) {
     if (!req.session.authenticated) {
         res.send({ status: "failure", message: "no user logged in" });
+        //  res.sendFile(path.join(__dirname, '..', 'views', 'login.html'));
+        // res.redirect('/login');
     }
     else {
         next();

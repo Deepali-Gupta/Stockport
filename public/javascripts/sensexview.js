@@ -1,8 +1,7 @@
 $(document).ready(function () {
     var table_sensex = $('#table_sensex').DataTable();
-
-    loadTableAndChart();
     showSensexDetails();
+    loadTableAndChart();
     function loadTableAndChart() {
         var url = "/api/getsensexhist";
         $.getJSON(url, function (json) {
@@ -17,7 +16,7 @@ $(document).ready(function () {
                     json[i].volume,
                     json[i].adj_close
                 ]);
-                chart.options.data[0].dataPoints.push({ y: json[i].close });
+                chart.options.data[0].dataPoints.push({ y: parseInt( json[i].close) });
             }
             chart.options.data[0].dataPoints.reverse();
             table_sensex.draw();

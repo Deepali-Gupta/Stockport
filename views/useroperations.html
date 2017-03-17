@@ -16,24 +16,25 @@
 
 <body>
     <div class="container">
-        <h2 class="form-signin form-signin-heading">Select User</h2>
-         <select id="delsel" class="form-signin form-control  " autofocus></select>
-        
         <form class="form-signin" id="form_del">
+            <h2 class="form-signin-heading">Select User</h2>
+            <select id="delsel" class="form-control" autofocus> </select>
+
+
             <h2 class="form-signin-heading">Delete User</h2>
             <!--<input type="text" name="username" class="form-control" placeholder="username" required autofocus>-->
             <!--<input type="password" name="password" class="form-control" placeholder="password" required>
             <input type="text" name="email" class="form-control" placeholder="email" required>-->
-           
-            
+
+
             <input class="btn btn-lg btn-primary btn-block" type="submit" value="Delete User"></input>
         </form>
 
         <form class="form-signin" id="form_edit">
             <h2 class="form-signin-heading">Edit User</h2>
-            <input type="text" name="username" class="form-control" placeholder="new username" required >
+            <input type="text" name="username" class="form-control" placeholder="new username" required>
             <input type="password" name="password" class="form-control" placeholder="new password" required>
-             <select id="rolesel" class="form-control" name = 'role' >
+            <select id="rolesel" class="form-control" name='role'>
                  <option>member</option>
                  <option>admin</option>
              </select>

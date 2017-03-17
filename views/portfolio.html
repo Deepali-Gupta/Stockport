@@ -6,14 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script src="javascripts/portfolio.js"></script>
 </head>
 
 <body>
@@ -45,7 +38,7 @@
             <h6>Portfolio Value</h6>
             <h1 id="portfolio_value"></h1>
             <p id="portfolio_profit" class="lead"></p>
-            <button type="button" class="btn btn-primary">Update PortFolio</button>
+
             <!--<p id="sensex_perc" class="lead"></p>-->
         </div>
         <!-- price table-->
@@ -84,9 +77,24 @@
         </table>
 
     </div>
-
-
+    <!--<button type="button" class="btn btn-primary">Update PortFolio</button>-->
+    <form class="form-signin" id="form_edit_portfolio">
+        <h2 class="form-signin-heading">Update Portfolio</h2>
+        <!---->
+        <select id="stocksel" class="form-signin form-control"></select>
+        <input type="text" name="date" class="form-control" placeholder="YYYYMMDD"  required>
+        <input type="number" name="qty" class="form-control" placeholder="qty" required>
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update Portfolio"></input>
+    </form>
 
 </body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/login.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="javascripts/portfolio.js"></script>
 
 </html>
