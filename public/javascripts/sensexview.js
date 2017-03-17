@@ -30,8 +30,8 @@ $(document).ready(function () {
             json = json.data;
             console.log(json);
             $('#sensex_index').text(json.close);
-            $('#sensex_diff').text("diff = " + json.diff);
-            $('#sensex_perc').text("perc = " + json.perc);
+            $('#sensex_diff').text("Change = " + json.diff);
+            $('#sensex_perc').text("Percentage Change = " + json.perc+" %");
         });
     }
     var chart = new CanvasJS.Chart("chartContainer",

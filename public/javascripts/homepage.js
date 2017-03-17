@@ -139,7 +139,7 @@ $(document).ready(function () {
         console.log("portfolio_button pressed");
         $.getJSON("/isloggedin", function (data) {
             // console.log(data);
-            if (data == true) {
+            if (data != false) {
                 window.location = '/portfolio'
             }
             else {

@@ -13,7 +13,7 @@ $(document).ready(function () {
             for (var i = 0; i < json.length; i++) {
                 listItems += "<option >" + json[i].username + "</option>";
             }
-            console.log(listItems);
+            // console.log(listItems);
             $("#delsel").html(listItems);
         });
     }
@@ -29,7 +29,7 @@ $(document).ready(function () {
         var posting = $.post(url, { username: user });
         posting.done(function (data) {
             console.log(data);
-            alert(data);
+            alert(data.message);
             location.reload(true);
         });
     });
@@ -48,11 +48,16 @@ $(document).ready(function () {
             e = form.find("input[name = 'email']").val()
         // console.log("+++++++++++++", user);
         var url = "/api/updateuser";
-        var posting = $.post(url, { username1: user, 
-            username2:n, password: p, email: e, role: r });
+        var posting = $.post(url, {
+            username1: user,
+            username2: n, password: p, 
+            email: e, 
+            role: r
+        });
         posting.done(function (data) {
-            console.log(data);
-            // TODO
+            console.log(data.message);
+            alert(data.message);
+            location.reload(true);
         });
     });
 

@@ -438,7 +438,7 @@ function updateUser(req, res, next) {
     'role = ${role}, ' +
     'email = ${email} ' +
     'where username = ${username1}',
-    [req.body])
+    req.body)
     .then(function () {
       res.status(200)
         .json({
