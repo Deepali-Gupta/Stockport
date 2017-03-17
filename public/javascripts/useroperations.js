@@ -29,7 +29,8 @@ $(document).ready(function () {
         var posting = $.post(url, { username: user });
         posting.done(function (data) {
             console.log(data);
-            // TODO
+            alert(data);
+            location.reload(true);
         });
     });
 

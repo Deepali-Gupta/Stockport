@@ -48,7 +48,7 @@ router.post('/api/updateuser', db.updateUser);
 //check server status
 router.get('/isloggedin', function (req, res, next) {
   if (req.session.authenticated)
-    res.send(req.session.authenticated);
+    res.send(req.session.username);
   else{
     res.send(false);
   }

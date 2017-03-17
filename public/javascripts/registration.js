@@ -9,10 +9,12 @@ $(document).ready(function () {
             p = form.find("input[name = 'password']").val(),
             e = form.find("input[name = 'email']").val(),
             url = "/register";
-        var posting = $.post(url, { username: n, password: p, role:"member", email: e });
+        var posting = $.post(url, { username: n, password: p, role: "member", email: e });
         posting.done(function (data) {
             console.log(data);
-            // TODO
+            alert(data.message);
+            location.reload(true);
+
         });
     });
 });

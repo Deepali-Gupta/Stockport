@@ -382,7 +382,11 @@ function createUser(req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(200)
+        .json({
+          status: 'failure',
+          message: err.detail
+        });
     });
 }
 

@@ -10,29 +10,31 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">Portfolio Manager</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/admin">Admin Hub</a></li>
-                <li><a href="#">Page 2</a></li>
-            </ul>
-            <!--<form class="navbar-form navbar-left">
+   <div id="navbarholder" > 
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">StockPort</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/admin">Admin Hub</a></li>
+                </ul>
+                <!--<form class="navbar-form navbar-left">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>-->
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="\register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="\login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                <li><a href="\logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+                <ul class="nav navbar-nav navbar-right">
+                    <li id = "signup"><a href="\register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li id = "login"><a href="\login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li id = "logout"><a href="\logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    <!--<li id = "loggedin" hidden><a href="\logout"><span class="glyphicon glyphicon-log-out"></span> Name</a></li>-->
+                </ul>
+            </div>
+        </nav>
+    </div>
     <div class="container">
         <div class="jumbotron">
             <h6>Portfolio Value</h6>
@@ -82,7 +84,7 @@
         <h2 class="form-signin-heading">Update Portfolio</h2>
         <!---->
         <select id="stocksel" class="form-signin form-control"></select>
-        <input type="text" name="date" class="form-control" placeholder="YYYYMMDD"  required>
+        <input type="text" name="date" class="form-control" placeholder="YYYYMMDD" required>
         <input type="number" name="qty" class="form-control" placeholder="qty" required>
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update Portfolio"></input>
     </form>
