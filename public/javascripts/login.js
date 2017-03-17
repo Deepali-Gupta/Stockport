@@ -17,6 +17,7 @@ $(document).ready(function () {
             }
             else {
                 // tempAlert("Login failed",5000);
+                 alert ("Login Failed!");
                 window.location = "/login";
             }
 

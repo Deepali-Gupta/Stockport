@@ -102,6 +102,7 @@ $(document).ready(function () {
         var posting = $.post(url, { stockname: stock, date: String(d), qty: q });
         posting.done(function (data) {
             console.log(data);
+            alert(data.message);
         });
     });
 

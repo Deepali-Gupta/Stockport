@@ -138,8 +138,8 @@ $(document).ready(function () {
     $('#portfolio_button').click(function () {
         console.log("portfolio_button pressed");
         $.getJSON("/isloggedin", function (data) {
-            // console.log(data);
-            if (data != false) {
+            console.log(data);
+            if (data == true) {
                 window.location = '/portfolio'
             }
             else {
