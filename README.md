@@ -20,3 +20,5 @@ Prerequisites: NodeJs and npm
 * Go to a browser and open `localhost:3000`
 
 More details on functionality, views, backend logic and design process are available in the [design document](design_doc.pdf) 
+
+This project was built by [Deepali Gupta](https://github.com/Deepali-Gupta) and [Harshdeep Gupta](https://github.com/HarshdeepGupta)
